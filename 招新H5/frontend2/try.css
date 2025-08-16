@@ -1,0 +1,568 @@
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面容器 */
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('images/officeBackground.jpg') no-repeat center center;
+    background-size: cover;
+    overflow: hidden;
+    font-family: "Microsoft YaHei", sans-serif;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.toptitle {
+    position: absolute;
+    top: 78px;
+    /* 原53px + 下移25px = 78px */
+    left: 16px;
+    font-size: 20px;
+    z-index: 10;
+    color: #410D09;
+}
+
+/* 左上角内容 */
+.top-left-content {
+    position: absolute;
+    top: 51px;
+    left: 8px;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+    top: 97px;
+}
+
+.top-left-content img {
+    width: 86px;
+    height: 121px;
+    object-fit: contain;
+    margin-right: 10px;
+    top: 25px;
+    left: 30px;
+    position: absolute;
+}
+
+.top-left-text {
+    background-color: #D8D8D8;
+    padding: 10px;
+    width: 241px;
+    height: 116px;
+    font-size: 12px;
+    color: #0e0d0d;
+    line-height: 1.4;
+    position: absolute;
+    left: 98px;
+    top: 25px;
+}
+
+/* 内容区域布局 */
+.content {
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 背景 */
+.text-content-bg {
+    width: 323px;
+    height: 400px;
+    background-color: #D8D8D8;
+    padding: 30px;
+    overflow-wrap: break-word;
+    position: absolute;
+    top: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 文字容器 */
+.text-content {
+    width: 100%;
+    font-size: 16px;
+    position: absolute;
+    top: 15px;
+    left: 16px;
+    font-weight: bold;
+}
+
+.coveredText {
+    top: 50px;
+    font-size: 14px;
+    position: absolute;
+    left: 16px;
+}
+
+.mainLine1 {
+    position: absolute;
+    top: 76px;
+    font-size: 12px;
+    left: 16px;
+}
+
+.mainLine2 {
+    position: absolute;
+    top: 96px;
+    font-size: 12px;
+    left: 16px;
+}
+
+.mainLine3 {
+    position: absolute;
+    top: 112px;
+    font-size: 10px;
+    left: 16px;
+    right: 16px;
+    line-height: 1.4;
+}
+
+.interactionPart {
+    position: absolute;
+    top: 160px;
+    left: 16px;
+    font-size: 12px;
+    width: calc(100% - 32px);
+}
+
+
+.box-container {
+    width: 100%;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-bottom: -20px;
+    /* 选项高低 */
+}
+
+/* 每个需求项的盒子 */
+.requirement-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 20px;
+    width: 210px;
+    border-radius: 10px;
+}
+
+/* 需求文字样式 */
+.requirement-text {
+    font-size: 10px;
+    margin-right: 5px;
+    flex-shrink: 0;
+    width: 50px;
+    /* 添加背景图片和高度设置 */
+    background-image: url('/images/beforeoption.jpg');
+    background-size: cover;
+    /* 图片自适应填充元素 */
+    background-position: center;
+    /* 图片居中显示 */
+    background-repeat: no-repeat;
+    /* 禁止图片重复 */
+    height: 28px;
+    /* 设置高度为 28px */
+    display: flex;
+    /* 用于文字居中 */
+    align-items: center;
+    /* 垂直居中文字 */
+    justify-content: center;
+    /* 水平居中文字 */
+    color: #000;
+    /* 确保文字颜色与背景对比明显 */
+}
+
+
+/* 选项样式样式 */
+.option {
+    width: 210px;
+    height: 28px;
+    /* 修改高度为28px */
+    border-radius: 10px;
+    line-height: 28px;
+    /* 行高与高度一致，文字垂直居中 */
+    text-align: center;
+    /* 替换背景图片设置 */
+    background-image: url('/images/optionbg.jpg');
+    background-size: cover;
+    /* 图片自适应填充 */
+    background-position: center;
+    /* 图片居中 */
+    background-repeat: no-repeat;
+    /* 禁止重复 */
+    margin-top: 1px;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s;
+    z-index: 5;
+    font-size: 11px;
+    color: #000;
+    /* 确保文字与背景对比清晰 */
+}
+
+/* 拖拽中的元素保持背景图 */
+.option.touch-dragging {
+    position: fixed;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0.9;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    will-change: transform;
+    /* 保留保留背景图样式 */
+    background-image: url('/images/optionbg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.option.dragging {
+    opacity: 0.7;
+    transform: scale(1.05);
+    /* 保留背景图样式 */
+    background-image: url('/images/optionbg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+
+.option-placeholder {
+    width: 210px;
+    height: 20px;
+    margin-top: 2px;
+}
+
+/* 目标框样式 */
+.progress-wrap {
+    /* 原有样式保持不变 */
+    width: 160px;
+    height: 20px;
+    background-color: #fff;
+    border: 1px dashed #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    margin: -3px;
+    /* 新增：为伪元素做定位准备 */
+    position: relative;
+    height: 28px;
+    /* 让容器高度与图片一致，避免图片被截断 */
+    overflow: visible;
+    /* 允许图片超出容器（如果需要） */
+}
+
+.progress-wrap::after {
+    content: "";
+    position: absolute;
+    right: -50px;
+    /* 调整图片位置，避免与文字重叠 */
+    top: 0;
+    width: 50px;
+    /* 根据图片实际宽度调整 */
+    height: 28px;
+    /* 固定高度 */
+    background-image: url('/images/afteroption.jpg');
+    background-size: contain;
+    /* 改用contain，避免图片拉伸变形 */
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
+    /* 确保图片在容器上方可见 */
+}
+
+
+
+/* 拖拽悬停状态 */
+.progress-wrap.drag-over {
+    border-color: #4C66E1;
+    background-color: rgba(76, 102, 225, 0.2);
+    border-style: solid;
+    transform: scale(1.02);
+}
+
+/* 正确状态 */
+.option.correct {
+    border-color: #10b981;
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+
+/* 错误状态 */
+.option.incorrect {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+/* 返回动画 - 0.3秒直线过渡效果 */
+.return-animation {
+    transition: transform 300ms linear !important;
+    z-index: 15 !important;
+}
+
+/* 匹配成功的覆盖图片样式 */
+.correct-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 28px;
+    /* 固定高度 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 10;
+    /* 覆盖在原有内容上方 */
+    pointer-events: none;
+    /* 不影响其他交互 */
+}
+
+/* 为三个需求项分别指定图片 */
+.requirement-box[data-correct="A"] .correct-overlay {
+    background-image: url('/images/h1correct.jpg');
+}
+
+.requirement-box[data-correct="B"] .correct-overlay {
+    background-image: url('/images/pcorrect.jpg');
+    /* 第二行对应图片 */
+}
+
+.requirement-box[data-correct="C"] .correct-overlay {
+    background-image: url('/images/bcorrect.png');
+    /* 第三行对应图片 */
+}
+
+/* 确认按钮 */
+.confirm-button {
+    position: absolute;
+    bottom: -35px;
+    width: 116px;
+    height: 36px;
+    background-color: #4C66E1;
+    font-size: 16px;
+    border-radius: 18px;
+    color: white;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+/* 进度条背景 */
+.progress-bg {
+    width: 100%;
+    height: 100%;
+    background-color: #EEEEEE;
+}
+
+/* 进度条 */
+.progress-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #EEEEEE;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 音乐按钮 */
+.music-btn {
+    position: absolute;
+    top: 7.95%;
+    right: 2.13%;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: black;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 30;
+}
+
+/* 音乐播放按键旋转效果 */
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin-animation {
+    animation: spin-slow 2s linear infinite;
+}
+
+/* 进度条容器 */
+.progress-container {
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 325px;
+}
+
+/* 灰色粗线 + flex 容器 */
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background-color: #ccc;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    bottom: -10px;
+    position: absolute;
+}
+
+/* 6个等距灰色点 */
+.progress-node {
+    width: 12px;
+    height: 12px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-top: -3px;
+    z-index: 2;
+}
+
+/* 覆盖第一个点的图片 */
+.progress-dot {
+    width: 18px;
+    height: 24px;
+    background: url('/images/productJuan.png') no-repeat center;
+    background-size: contain;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 3;
+}
+
+/* 可拖拽选项容器（向下移动30px） */
+.option-container {
+    position: relative;
+    top: 30px;
+}
+
+/* 手机端适配 */
+@media (max-width: 380px) {
+    .toptitle {
+        font-size: 16px;
+        top: 36px;
+        /* 原16px + 下移20px（响应式调整） */
+    }
+
+    .top-left-content {
+        top: 50px;
+    }
+
+    .top-left-content img {
+        width: 50px;
+        height: 70px;
+    }
+
+    .top-left-text {
+        font-size: 11px;
+        padding: 8px 10px;
+        min-height: 70px;
+    }
+
+    .text-content-bg {
+        min-height: 340px;
+        bottom: 50px;
+        padding: 15px;
+    }
+
+    .text-content {
+        font-size: 15px;
+        top: 12px;
+    }
+
+    .coveredText {
+        top: 45px;
+        font-size: 13px;
+    }
+
+    .mainLine1 {
+        top: 70px;
+        font-size: 11px;
+    }
+
+    .mainLine2 {
+        top: 88px;
+        font-size: 11px;
+    }
+
+    .mainLine3 {
+        top: 104px;
+        font-size: 9px;
+    }
+
+    .interactionPart {
+        top: 145px;
+    }
+
+    .option,
+    .progress-wrap {
+        font-size: 10px;
+        height: 28px;
+        line-height: 28px;
+    }
+
+    .confirm-button {
+        width: 100px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .progress-container {
+        bottom: -40px;
+    }
+
+    /* 移动端选项同步下移 */
+    .option-container {
+        top: 30px;
+    }
+}
+
+/* 超小屏幕适配 */
+@media (max-width: 320px) {
+    .mainLine3 {
+        top: 100px;
+    }
+
+    .interactionPart {
+        top: 135px;
+    }
+
+    .box-container {
+        height: 100px;
+    }
+}

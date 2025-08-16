@@ -1,0 +1,102 @@
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面容器 */
+.page3-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('images/officeBackground.jpg') no-repeat center center;
+    background-size: cover;
+    overflow: hidden;
+    font-family: sans-serif;
+}
+
+/* 内容区域容器 */
+.content {
+    position: absolute;
+    /* top: 48px → 48/667×100% ≈ 7.2% */
+    top: 7.2%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* 场景描述文字框 */
+.scene-text {
+    background-color: rgb(180, 178, 178);
+    width: 248px;
+    height: 210px;
+    /* left: 19px → 19/375×100% ≈ 5.07% */
+    left: 5.07%;
+    /* top: 75px → 75/667×100% ≈ 11.24% */
+    top: 11.24%;
+    padding: 16px;
+    font-size: 19px;
+    line-height: 1.5;
+    color: #333333;
+    margin-bottom: 30px;
+    position: absolute; /* 补充定位属性，确保left/top生效 */
+}
+
+/* 电脑区域容器 */
+.computer-area {
+    position: absolute;
+    flex-direction: column;
+    margin-top: 20px;
+    /* left: 40px → 40/375×100% ≈ 10.67% */
+    left: 10.67%;
+    /* bottom: 240px → 240/667×100% ≈ 35.98%（距离底部的百分比） */
+    bottom: 35.98%;
+    display: flex; /* 补充flex属性，确保子元素垂直排列 */
+}
+
+/* 电脑图标 */
+.computer-icon {
+    width: 87px;
+    height: 78px;
+    background: url('/images/computer.png') no-repeat center center;
+    background-size: contain;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* 电脑图标悬停效果 */
+.computer-icon:hover {
+    transform: scale(1.05);
+}
+
+/* 音乐按钮 */
+.music-btn {
+    position: absolute;
+    /* top: 53px → 53/667×100% ≈ 7.95% */
+    top: 7.95%;
+    /* right: 8px → 8/375×100% ≈ 2.13% */
+    right: 2.13%;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: black;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 30;
+}
+
+/* 音乐播放按键旋转效果 */
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}    
+
+.spin-animation {
+    animation: spin-slow 2s linear infinite;
+}

@@ -1,0 +1,145 @@
+/* 主容器 */
+.main-container {
+    background-image: url('/images/page1Img/outSchoolBackgroud.jpg'); 
+    background-size: cover;
+    background-position: center;
+    position: relative; /* 补充相对定位，作为子元素定位基准 */
+    width: 100vw;
+    height: 100vh;
+}
+
+.close-btn {
+    position: absolute;
+    /* left: 15px → 15/375×100% = 4% */
+    left: 4%;
+    /* 补充top定位（原代码缺失，基于常见导航栏高度假设为50px） */
+    top: calc(50px / 667px * 100%) ≈ 7.5%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-title {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    /* 补充定位（原代码缺失，假设与close-btn同水平高度） */
+    position: absolute;
+    top: 7.5%; /* 与close-btn保持同一行 */
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.menu-btn {
+    position: absolute;
+    /* right: 15px → 15/375×100% = 4% */
+    right: 4%;
+    /* 补充top定位（与close-btn同高度） */
+    top: 7.5%;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* 左侧信息栏 */
+.info-panel {
+    position: absolute;
+    /* top: 87px → 87/667×100% ≈ 13.04% */
+    top: 13.04%;
+    /* left: 19px → 19/375×100% ≈ 5.07% */
+    left: 5.07%;
+    padding: 10px;
+    background-color: gray;
+    backdrop-filter: blur(4px);
+    width: 129px;
+    height: 172px;
+    z-index: 21;
+}
+
+.info-title {
+    color: black;
+    font-size: 14px;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.info-content {
+    color: black;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.info-content + .info-content {
+    margin-top: 8px;
+}
+
+/* 大门容器 */
+.gate-container {
+    position: absolute;
+    /* right: 33px → 33/375×100% = 8.8% */
+    right: 8.8%;
+    top: 50%; /* 垂直居中基准点保持不变 */
+    transform: translateY(-50%); /* 垂直居中调整保持不变 */
+    width: 176px;
+    height: 332px;
+    cursor: pointer;
+    z-index: 10;
+    background-image: url('/images/page1Img/schoolGate.jpg'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* 引导文案 */
+.guide-text {
+    position: absolute;
+    /* bottom: 100px → 100/667×100% ≈ 15% */
+    bottom: 15%;
+    /* right: 121px → 121/375×100% ≈ 32.27% */
+    right: 32.27%;
+    color: gray;
+    z-index: 10;
+}
+
+.guide-text p {
+    font-size: 19px;
+    line-height: 1.5;
+    width: 212px;
+    height: 154px;
+}
+
+/* 音乐按钮 */
+.music-btn {
+    position: absolute;
+    /* top: 53px → 53/667×100% ≈ 7.95% */
+    top: 7.95%;
+    /* right: 8px → 8/375×100% ≈ 2.13% */
+    right: 2.13%;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: black;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 30;
+}
+
+/* 音乐播放按键旋转效果 */
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}    
+
+.spin-animation {
+    animation: spin-slow 2s linear infinite;
+}

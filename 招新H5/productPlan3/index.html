@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <title>恭喜通关</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 音乐控制按钮 -->
+        <button class="music-btn" @click="toggleMusic">
+            <i class="fa fa-music" :class="{ 'spin-animation': isPlaying }"></i>
+        </button>
+
+        <!-- 音频元素 - 只播放一次 -->
+        <audio ref="bgMusic" autoplay>
+            <source src="/musics/配乐文件3-游戏通关.MP3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+
+        <!-- 容器 -->
+        <div class="container">
+            <h1 class="title">恭喜通关</h1>
+            <!-- 病毒图片框 -->
+            <div class="virus-img" id="virusImg">
+                <img src="/images/bigVirus.png" alt="病毒图片" style="width: 100%; height: auto;">
+            </div>
+            <p class="desc">
+                &nbsp;&nbsp;&nbsp;&nbsp;产品策划与运营部负责深度挖掘用户需求，精准定位核心需求场景，负责掌上重邮和邮邮帮的功能更新与迭代。运营方面我们主导新媒体矩阵的内容生产与传播策略，负责重邮小邮和QQ主页菌的公众号推文制作与内容撰写。同时，我们作为跨部门协作中枢，促进各部门沟通协作。
+            </p>
+            <img src="/images/productJuan.png" class="character-img">
+            <button class="next-btn" @click="goToNextLevel">下一关</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        createApp({
+            setup() {
+                // 音乐状态相关响应式数据
+                const bgMusic = ref(null);
+                const isPlaying = ref(true); // 默认设置为播放状态
+
+                // 保存音乐状态到localStorage
+                const saveMusicState = () => {
+                    if (bgMusic.value) {
+                        localStorage.setItem('musicState', JSON.stringify({
+                            isPlaying: isPlaying.value,
+                            currentTime: bgMusic.value.currentTime
+                        }));
+                    }
+                };
+
+                // 切换音乐播放/暂停
+                const toggleMusic = () => {
+                    isPlaying.value = !isPlaying.value;
+                    if (isPlaying.value) {
+                        // 播放音频，处理可能的失败情况
+                        bgMusic.value.play().catch(err => {
+                            console.log('播放失败:', err);
+                            isPlaying.value = false;
+                        });
+                    } else {
+                        bgMusic.value.pause();
+                    }
+                    saveMusicState();
+                };
+
+                // 跳转到下一关
+                const goToNextLevel = () => {
+                    saveMusicState();
+                    window.location.href = '/visual1/index.html';
+                };
+
+                // 尝试自动播放音乐的函数
+                const tryAutoPlay = () => {
+                    if (bgMusic.value && !isPlaying.value) {
+                        bgMusic.value.play().then(() => {
+                            isPlaying.value = true;
+                            console.log('音乐自动播放成功');
+                        }).catch(err => {
+                            console.log('自动播放失败，需要用户交互:', err);
+                            isPlaying.value = false;
+                        });
+                    }
+                };
+
+                // 页面加载时恢复音乐状态
+                onMounted(() => {
+                    // 病毒图片3秒后渐变消失
+                    const virusImg = document.getElementById('virusImg');
+                    setTimeout(() => {
+                        virusImg.classList.add('fade-out');
+                    }, 3000);
+
+                    // 尝试自动播放音乐
+                    tryAutoPlay();
+                    
+                    // 监听用户交互，一旦有交互就尝试播放音乐
+                    document.addEventListener('click', tryAutoPlay, { once: true });
+                    document.addEventListener('touchstart', tryAutoPlay, { once: true });
+
+                    // 恢复音乐状态
+                    const savedState = JSON.parse(localStorage.getItem('musicState') || '{"isPlaying": true, "currentTime": 0}');
+                    isPlaying.value = savedState.isPlaying;
+
+                    // 等待音频加载完成后恢复进度
+                    if (bgMusic.value) {
+                        // 音频播放结束时更新状态
+                        bgMusic.value.addEventListener('ended', () => {
+                            isPlaying.value = false;
+                            saveMusicState();
+                        });
+
+                        const onMetadataLoaded = () => {
+                            bgMusic.value.currentTime = savedState.currentTime;
+                            if (isPlaying.value) {
+                                bgMusic.value.play().catch(err => {
+                                    console.log('需用户交互后播放:', err);
+                                    isPlaying.value = false;
+                                });
+                            }
+                            bgMusic.value.removeEventListener('loadedmetadata', onMetadataLoaded);
+                        };
+
+                        bgMusic.value.addEventListener('loadedmetadata', onMetadataLoaded);
+                        if (bgMusic.value.readyState >= 1) {
+                            onMetadataLoaded();
+                        }
+                    }
+                });
+
+                // 页面离开时保存音乐状态
+                onUnmounted(saveMusicState);
+
+                return {
+                    bgMusic,
+                    isPlaying,
+                    toggleMusic,
+                    goToNextLevel
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

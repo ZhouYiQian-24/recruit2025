@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>病毒袭击！红岩重启计划</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app" class="page4-container">
+        <!-- 左上角内容（优化的5秒渐显） -->
+        <div class="top-left-content" :style="{ opacity: topLeftOpacity }">
+            <img src="/images/mainJuan.png" alt="助力图标" class="juanjuan-icon">
+            <div class="top-left-text">
+                病毒把网校的系统搅得一团糟，
+                大家都急坏了。现在只有你能帮我们了。<br>
+                别听它嚣张，你的本事可比它说的厉害多了。<br>
+                我们都相信你，快来和我们一起赶走病毒吧，网校需要你！
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <div class="battle-letter-bg">
+                <!-- 战书文字容器 -->
+                <div class="battle-letter-text">
+                    <!-- 第一部分：战书标题 -->
+                    <div class="battle-section section-title">
+                        <h2 class="title" :class="{ 'active': titleShow }">
+                            <span class="char" v-for="(char, i) in '战书'" :key="i"
+                                :class="{ 'active': titleChars[i] }">{{ char }}</span>
+                        </h2>
+                    </div>
+
+                    <!-- 第二部分：称呼 -->
+                    <div class="battle-section section-greeting">
+                        <p class="text-line" :class="{ 'active': line1Show }">
+                            <span class="char" v-for="(char, i) in '红岩网校成员们：'" :key="i"
+                                :class="{ 'active': line1Chars[i] }">{{ char }}</span>
+                        </p>
+                    </div>
+
+                    <!-- 第三部分：正文内容 -->
+                    <div class="battle-section section-content">
+                        <p class="text-line" :class="{ 'active': line2Show }">
+                            <span class="char" v-for="(char, i) in '&nbsp;&nbsp;&nbsp;&nbsp;当你们看到这行字时，'" :key="i"
+                                :class="{ 'active': line2Chars[i] }">{{ char }}</span>
+                        </p>
+                        <p class="text-line" :class="{ 'active': line3Show }">
+                            <span class="char" v-for="(char, i) in '我的孩子们已经在你们的'" :key="i"
+                                :class="{ 'active': line3Chars[i] }">{{ char }}</span>
+                        </p>
+                        <p class="text-line" :class="{ 'active': line4Show }">
+                            <span class="char" v-for="(char, i) in '系统里安家了。'" :key="i"
+                                :class="{ 'active': line4Chars[i] }">{{ char }}</span>
+                        </p>
+                        <p class="text-line" :class="{ 'active': line5Show }">
+                            <span class="char" v-for="(char, i) in '&nbsp;&nbsp;&nbsp;&nbsp;规则很简单：'" :key="i"
+                                :class="{ 'active': line5Chars[i] }">{{ char }}</span>
+                        </p>
+                        <p class="text-line" :class="{ 'active': line6Show }">
+                            <span class="char" v-for="(char, i) in '要么，乖乖认输，看着你们那网站彻底完蛋；'" :key="i"
+                                :class="{ 'active': line6Chars[i] }">{{ char }}</span>
+                        </p>
+                        <p class="text-line" :class="{ 'active': line8Show }">
+                            <span class="char" v-for="(char, i) in '要么，就来试试，看看能不能在我把一切砸烂前拦住我。'" :key="i"
+                                :class="{ 'active': line8Chars[i] }">{{ char }}</span>
+                        </p>
+
+                    </div>
+
+                    <!-- 第四部分：落款 -->
+                    <div class="battle-section section-signature">
+                        <p class="text-line" :class="{ 'active': line10Show }">
+                            <span class="char" v-for="(char, i) in '病毒大王 留'" :key="i"
+                                :class="{ 'active': line10Chars[i] }">{{ char }}</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- 迎战按钮 -->
+                <button class="battle-btn" :class="{ 'active': showBattleBtn }" @click="startBattle">
+                    迎战
+                </button>
+            </div>
+        </div>
+
+        <!-- 音乐控制按钮 -->
+        <button class="music-btn" @click="toggleMusic">
+            <i class="fa fa-music" :class="{ 'spin': isPlaying }"></i>
+        </button>
+
+        <!-- 音频元素 -->
+        <audio ref="bgMusic" loop>
+            <source src="/musics/配乐文件1-悬疑.MP3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        createApp({
+            setup() {
+                // 音乐状态（复用页面2的逻辑）
+                const bgMusic = ref(null);
+                const isPlaying = ref(false);
+
+                // 左上角渐显控制
+                const topLeftOpacity = ref(0);
+
+                // 元素显示状态
+                const titleShow = ref(false);
+                const line1Show = ref(false);
+                const line2Show = ref(false);
+                const line3Show = ref(false);
+                const line4Show = ref(false);
+                const line5Show = ref(false);
+                const line6Show = ref(false);
+                const line8Show = ref(false);
+                const line10Show = ref(false);
+                const showBattleBtn = ref(false);
+
+                // 字符显示控制
+                const titleChars = ref(Array(2).fill(false));
+                const line1Chars = ref(Array(8).fill(false));
+                const line2Chars = ref(Array(14).fill(false));
+                const line3Chars = ref(Array(12).fill(false));
+                const line4Chars = ref(Array(7).fill(false));
+                const line5Chars = ref(Array(10).fill(false));
+                const line6Chars = ref(Array(20).fill(false));
+                const line8Chars = ref(Array(26).fill(false));
+                const line10Chars = ref(Array(8).fill(false));
+
+                // 逐字显示函数
+                const showChars = (charsRef, delay = 50) => {
+                    return new Promise(resolve => {
+                        charsRef.value.forEach((_, i) => {
+                            setTimeout(() => {
+                                charsRef.value[i] = true;
+                                if (i === charsRef.value.length - 1) resolve();
+                            }, i * delay);
+                        });
+                    });
+                };
+
+                // 保存音乐状态到localStorage（复用页面2的方法）
+                const saveMusicState = () => {
+                    if (bgMusic.value) {
+                        localStorage.setItem('musicState', JSON.stringify({
+                            isPlaying: isPlaying.value,
+                            currentTime: bgMusic.value.currentTime
+                        }));
+                    }
+                };
+
+                // 切换音乐播放/暂停（复用页面2的逻辑）
+                const toggleMusic = () => {
+                    isPlaying.value = !isPlaying.value;
+                    if (isPlaying.value) {
+                        bgMusic.value.play().catch(err => {
+                            console.log('播放失败:', err);
+                            isPlaying.value = false;
+                        });
+                    } else {
+                        bgMusic.value.pause();
+                    }
+                    saveMusicState();
+                };
+
+                // 页面加载时恢复音乐状态（核心：复用页面2的恢复逻辑）
+                onMounted(async () => {
+                    // 恢复音乐状态（从localStorage读取）
+                    const savedState = JSON.parse(localStorage.getItem('musicState') || '{"isPlaying": false, "currentTime": 0}');
+                    isPlaying.value = savedState.isPlaying;
+
+                    // 等待音频加载完成后恢复进度
+                    if (bgMusic.value) {
+                        // 监听音频元数据加载完成
+                        const onMetadataLoaded = () => {
+                            // 恢复上一页的播放进度
+                            bgMusic.value.currentTime = savedState.currentTime;
+                            // 如果上一页是播放状态，继续播放
+                            if (isPlaying.value) {
+                                bgMusic.value.play().catch(err => {
+                                    console.log('需用户交互后播放:', err);
+                                    isPlaying.value = false; // 若失败则重置状态
+                                });
+                            }
+                            // 移除事件监听（避免重复触发）
+                            bgMusic.value.removeEventListener('loadedmetadata', onMetadataLoaded);
+                        };
+
+                        // 绑定加载事件
+                        bgMusic.value.addEventListener('loadedmetadata', onMetadataLoaded);
+                        // 若音频已缓存，手动触发一次
+                        if (bgMusic.value.readyState >= 1) {
+                            onMetadataLoaded();
+                        }
+                    }
+
+                    // 左上角5秒渐显逻辑
+                    const totalDuration = 5000;
+                    const frameRate = 16;
+                    const totalFrames = totalDuration / frameRate;
+                    let currentFrame = 0;
+                    
+                    const interval = setInterval(() => {
+                        currentFrame++;
+                        topLeftOpacity.value = Math.min(currentFrame / totalFrames, 1);
+                        if (currentFrame >= totalFrames || topLeftOpacity.value >= 1) {
+                            clearInterval(interval);
+                            topLeftOpacity.value = 1;
+                        }
+                    }, frameRate);
+
+                    // 战书文字逐字显示
+                    titleShow.value = true;
+                    await showChars(titleChars);
+                    line1Show.value = true;
+                    await showChars(line1Chars);
+                    line2Show.value = true;
+                    await showChars(line2Chars);
+                    line3Show.value = true;
+                    await showChars(line3Chars);
+                    line4Show.value = true;
+                    await showChars(line4Chars);
+                    line5Show.value = true;
+                    await showChars(line5Chars);
+                    line6Show.value = true;
+                    await showChars(line6Chars);
+                    line8Show.value = true;
+                    await showChars(line8Chars);
+                    line10Show.value = true;
+                    await showChars(line10Chars);
+
+                    showBattleBtn.value = true;
+                });
+
+                // 页面离开时保存音乐状态（跳转前保存）
+                onUnmounted(saveMusicState);
+
+                // 迎战按钮逻辑（跳转前保存音乐状态）
+                const startBattle = () => {
+                    saveMusicState(); // 跳转前保存当前状态
+                    window.location.href = "/productPlan1/index.html";
+                };
+
+                return {
+                    isPlaying, bgMusic,
+                    topLeftOpacity,
+                    titleShow, line1Show, line2Show, line3Show, line4Show, line5Show, line6Show,
+                    line8Show, line10Show, showBattleBtn,
+                    toggleMusic, startBattle,
+                    titleChars, line1Chars, line2Chars, line3Chars, line4Chars, line5Chars, line6Chars,
+                    line8Chars, line10Chars
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

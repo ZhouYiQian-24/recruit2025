@@ -1,0 +1,228 @@
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面容器 */
+.page4-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('images/officeBackground.jpg') no-repeat center center;
+    background-size: cover;
+    overflow: hidden;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+/* 左上角内容 */
+.top-left-content {
+    position: absolute;
+    /* top: 51px; 原垂直方向距离，转换为百分比：(51 / 667) * 100% ≈ 7.65% */
+    top: 7.65%; 
+    /* left: 8px; 原水平方向距离，转换为百分比：(8 / 375) * 100% ≈ 2.13% */
+    left: 2.13%; 
+    display: flex;
+    align-items: center;
+    transition: opacity 5s ease-out;
+    z-index: 5;
+}
+
+.juanjuan-icon {
+    width: 69px;
+    height: 92px;
+    object-fit: contain;
+    /* margin-right: 10px; 相对父容器 top-left-content 水平方向，父容器可视为按屏幕宽布局，这里转换：(10 / 375) * 100% ≈ 2.67% */
+    margin-right: 2.67%; 
+}
+
+.top-left-text {
+    background-color: rgb(192, 190, 190);
+    padding: 10px;
+    width: 230px;
+    height: 150px;
+    font-size: 14px;
+    color: #0e0d0d;
+    line-height: 1.4;
+    position: absolute;
+    /* top: 22px; 相对父容器 top-left-content 垂直方向，父容器高度这里按屏幕高算不太对，实际父容器 top-left-content 没有明确设置固定高度，它是由内容撑起，但从布局逻辑看，可近似认为相对屏幕高，(22 / 667) * 100% ≈ 3.3%；也可理解为相对自身父容器（top-left-content），不过这里简化按屏幕高转换  */
+    top: 3.3%; 
+    /* left: 75px; 相对父容器 top-left-content 水平方向，(75 / 375) * 100% = 20% */
+    left: 100%; 
+}
+
+/* 内容区域布局 */
+.content {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* 这里 padding: 20px; 若要转换相对屏幕宽高，水平方向：(20 / 375) * 100% ≈ 5.33%，垂直方向：(20 / 667) * 100% ≈ 3%，不过它是内容区域内部的内边距，不影响与屏幕边缘定位，可保持原样，若需求是相对屏幕边缘调整，可按需改，这里先保持  */
+}
+
+/* 战书背景（直接显示） */
+.battle-letter-bg {
+    width: 326px;
+    min-height: 482px;
+    background-color: yellow;
+    padding: 30px;
+    overflow-wrap: break-word;
+    position: absolute;
+    /* top: 230px; 相对屏幕高，(230 / 667) * 100% ≈ 34.48% */
+    top: 34.48%; 
+}
+
+/* 战书四部分容器（仅调整间距） */
+.battle-section {
+    margin: 4px 0;
+}
+
+/* 第一部分：战书标题（仅微调下方间距） */
+.section-title {
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
+
+/* 第二部分：称呼（仅调整上下间距） */
+.section-greeting {
+    margin: 10px 10px;
+}
+
+/* 第三部分：正文内容（核心调整：统一 line-height + 减小 margin） */
+.section-content {
+    line-height: 1.2;
+    margin-top: 6px;
+    margin-left: 35px;
+    margin-right: 48px;
+}
+
+/* 第四部分：落款（仅调整上下间距） */
+.section-signature {
+    text-align: right;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/* 标题样式（保留原尺寸，仅调整下方间距） */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* 文字行样式（核心调整：统一 line-height + 减小 margin） */
+.text-line {
+    font-size: 16px;
+    color: #444;
+    margin: 6px 0;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+/* 单个字符样式（逐个显示核心，不改动） */
+.char {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
+
+.char.active {
+    opacity: 1;
+}
+
+/* 战书标题大小（保留原逻辑） */
+.battle-section.section-title .title {
+    font-size: 24px;
+}
+
+/* 战书正文及落款文字大小（保留原逻辑） */
+.battle-section .text-line {
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+/* 迎战按钮（保留原样式，不改动） */
+.battle-btn {
+    padding: 14px 36px;
+    width: 88px;
+    height: 34px;
+    font-size: 13px;
+    background-color: #114ff8;
+    color: white;
+    border: none;
+    border-radius: 17px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+    margin: auto;
+    display: block;
+    box-sizing: border-box;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.battle-btn.active {
+    opacity: 1;
+}
+
+.battle-btn:hover {
+    background-color: #1243cc;
+    transform: scale(1.05);
+}
+
+/* 音乐按钮（保留原样式，不改动） */
+.music-btn {
+    position: absolute;
+    /* top: 53px; 相对屏幕高，(53 / 667) * 100% ≈ 7.95% */
+    top: 7.95%; 
+    /* right: 8px; 相对屏幕宽，(8 / 375) * 100% ≈ 2.13% */
+    right: 2.13%; 
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: black;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 30;
+}
+
+/* 音乐图标旋转动画（保留原逻辑，不改动） */
+.fa-music.spin {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 响应式调整（保留原逻辑，不改动） */
+@media (max-width: 480px) {
+    .battle-letter-bg {
+        padding: 20px 15px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .text-line {
+        font-size: 14px;
+    }
+}

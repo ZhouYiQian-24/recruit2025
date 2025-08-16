@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>病毒袭击！红岩重启计划</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app" class="container">
+        <!-- 左上角内容  -->
+        <div class="toptitle">第三关 前端优化</div>
+        <div class="top-left-content">
+            <img src="/images/productJuan.png">
+            <div class="top-left-text">
+                &nbsp;&nbsp;糟糕！招新网页字样被病毒弄得一团糟，招新活动就要开始了，<b>请你依照屏幕左边样式重新设计招新网页的字体样式吧！</b>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <div class="text-content-bg">
+                <div class="device-container">
+                    <!-- 手机部分 -->
+                    <div class="phone">
+                        <div class="phone-text">
+                            <h2>红岩网校工作站</h2>
+                            <p>招新活动正式开始！</p>
+                            <p><b>活动时间：周五中午</b></p>
+                        </div>
+                    </div>
+                    <!-- 代码展示部分 -->
+                    <div class="code-area">
+                        <img src="/images/frontend1img.png" class="frontend1img">
+                    </div>
+                </div>
+                <div class="trapezoid-border"></div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                    </div>
+                    <div class="progress-dot"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 开始修复按钮 -->
+        <button class="repair-btn" @click="goToFrontend2">开始修复</button>
+
+        <!-- 音乐控制按钮 -->
+        <button class="music-btn" @click="toggleMusic">
+            <i class="fa fa-music" :class="{ 'spin': isPlaying }"></i>
+        </button>
+
+        <!-- 音频元素 -->
+        <audio ref="bgMusic" loop>
+            <source src="/musics/配乐文件2-游戏时的音乐.MP3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        createApp({
+            setup() {
+                // 音乐状态管理
+                const bgMusic = ref(null);
+                const isPlaying = ref(false);
+
+                // 保存音乐状态到localStorage
+                const saveMusicState = () => {
+                    if (bgMusic.value) {
+                        localStorage.setItem('musicState', JSON.stringify({
+                            isPlaying: isPlaying.value,
+                            currentTime: bgMusic.value.currentTime
+                        }));
+                    }
+                };
+
+                // 切换音乐播放/暂停
+                const toggleMusic = () => {
+                    isPlaying.value = !isPlaying.value;
+                    if (isPlaying.value) {
+                        bgMusic.value.play().catch(err => {
+                            console.log('播放失败:', err);
+                            isPlaying.value = false;
+                        });
+                    } else {
+                        bgMusic.value.pause();
+                    }
+                    saveMusicState();
+                };
+
+                // 跳转到下一页的核心方法
+                const goToFrontend2 = () => {
+                    try {
+                        // 1. 保存当前音乐状态
+                        saveMusicState();
+                        window.location.href = '/frontend2/index.html';
+
+                        console.log('跳转成功，目标路径：/frontend2/index.html');
+                    } catch (error) {
+                        console.error('跳转失败:', error);
+                    }
+                };
+
+                // 页面加载时恢复音乐状态
+                onMounted(async () => {
+                    const savedState = JSON.parse(localStorage.getItem('musicState') || '{"isPlaying": false, "currentTime": 0}');
+                    isPlaying.value = savedState.isPlaying;
+
+                    if (bgMusic.value) {
+                        const onMetadataLoaded = () => {
+                            bgMusic.value.currentTime = savedState.currentTime;
+                            if (isPlaying.value) {
+                                bgMusic.value.play().catch(err => {
+                                    console.log('需用户交互后播放:', err);
+                                    isPlaying.value = false;
+                                });
+                            }
+                            bgMusic.value.removeEventListener('loadedmetadata', onMetadataLoaded);
+                        };
+
+                        bgMusic.value.addEventListener('loadedmetadata', onMetadataLoaded);
+                        if (bgMusic.value.readyState >= 1) {
+                            onMetadataLoaded();
+                        }
+                    }
+
+                    // 病毒点击事件绑定
+                    const bindVirusClick = () => {
+                        const viruses = document.querySelectorAll('.virus');
+                        viruses.forEach((virus) => {
+                            virus.addEventListener('click', () => {
+                                window.location.href = '/productPlan2/index.html';
+                            });
+                        });
+                    };
+                    bindVirusClick();
+                });
+
+                // 页面离开时保存音乐状态
+                onUnmounted(saveMusicState);
+
+                // 必须将跳转方法暴露出去，否则模板中无法调用
+                return {
+                    isPlaying,
+                    bgMusic,
+                    toggleMusic,
+                    goToFrontend2  // 关键：暴露跳转方法
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

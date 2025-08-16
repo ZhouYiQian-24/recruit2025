@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>病毒袭击！红岩重启计划</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app" class="container">
+        <!-- 左上角内容  -->
+        <div class="toptitle">第一关 产品规划</div>
+        <div class="top-left-content">
+            <img src="/images/productJuan.png" alt="产品角色图片">
+            <div class="top-left-text">
+                PRD 就像 “组装家具的说明书”—— 买家具时，说明书会告诉你‘有哪些零件、怎么拼、拼完长什么样’，没有它，肯定抓瞎！作为产品经理，首先需要明确项目需求！<b>点击拖动选项填空吧～</b>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <div class="text-content-bg">
+                <div class="text-content">
+                    “网校招新线上报名系统” PRD V1.0
+                </div>
+                <div class="coveredText">二、需求分析</div>
+                <div class="mainLine1">核心用户：重庆邮电大学25级新生</div>
+                <div class="mainLine2">需求痛点：</div>
+                <div class="mainLine3">
+                    · 痛点 1：面对众多学生组织，不知道红岩网校和其他组织的区别<br>
+                    · 痛点 2：担心 “加入后学不到东西”，想提前了解部门工作内容<br>
+                    · 痛点 3：线上活动容易无聊，怕浪费时间
+                </div>
+                <div class="interactionPart">
+                    <div class="interactionTitle">用户需求 (对应需求特点)</div>
+                    <div class="box-container">
+                        <!-- 目标容器 -->
+                        <div class="requirement-box" data-correct="A">
+                            <span class="requirement-text">· 需求1：</span>
+                            <div class="progress-wrap" data-box="1">
+                                <div class="progress-bg"></div>
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                        <div class="requirement-box" data-correct="C">
+                            <span class="requirement-text">· 需求2：</span>
+                            <div class="progress-wrap" data-box="2">
+                                <div class="progress-bg"></div>
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                        <div class="requirement-box" data-correct="B">
+                            <span class="requirement-text">· 需求3：</span>
+                            <div class="progress-wrap" data-box="3">
+                                <div class="progress-bg"></div>
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 可拖拽选项 -->
+                    <div class="option-container">
+                        <div class="requirement-box">
+                            <span class="requirement-text"></span>
+                            <div class="option-placeholder" id="placeholder-A">
+                                <div class="option" draggable="true" data-value="A">清晰的部门介绍</div>
+                            </div>
+                        </div>
+                        <div class="requirement-box">
+                            <span class="requirement-text"></span>
+                            <div class="option-placeholder" id="placeholder-B">
+                                <div class="option" draggable="true" data-value="B">互动环节，如抽奖、问答</div>
+                            </div>
+                        </div>
+                        <div class="requirement-box">
+                            <span class="requirement-text"></span>
+                            <div class="option-placeholder" id="placeholder-C">
+                                <div class="option" draggable="true" data-value="C">真实的项目案例分享</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar-container">
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                    </div>
+                    <div class="progress-dot"></div>
+                </div>
+                <button class="confirm-button" @click="checkAndProceed">确认</button>
+            </div>
+        </div>
+
+        <!-- 音乐控制按钮 -->
+        <button class="music-btn" @click="toggleMusic">
+            <i class="fa fa-music" :class="{ 'spin': isPlaying }"></i>
+        </button>
+
+        <!-- 音频元素 -->
+        <audio ref="bgMusic" loop>
+            <source src="/musics/配乐文件2-游戏时的音乐.MP3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, onUnmounted, reactive } = Vue;
+        createApp({
+            setup() {
+                // 音乐状态管理
+                const bgMusic = ref(null);
+                const isPlaying = ref(false);
+                // 记录正确的选项数量
+                const correctCount = ref(0);
+                // 总选项数量
+                const totalItems = 3;
+
+                // 保存音乐状态到localStorage
+                const saveMusicState = () => {
+                    if (bgMusic.value) {
+                        localStorage.setItem('musicState', JSON.stringify({
+                            isPlaying: isPlaying.value,
+                            currentTime: bgMusic.value.currentTime
+                        }));
+                    }
+                };
+
+                // 切换音乐播放/暂停
+                const toggleMusic = () => {
+                    isPlaying.value = !isPlaying.value;
+                    if (isPlaying.value) {
+                        bgMusic.value.play().catch(err => {
+                            console.log('播放失败:', err);
+                            isPlaying.value = false;
+                        });
+                    } else {
+                        bgMusic.value.pause();
+                    }
+                    saveMusicState();
+                };
+
+                // 检查是否所有选项都正确并跳转
+                const checkAndProceed = () => {
+                    if (correctCount.value === totalItems) {
+                        // 所有选项都正确，跳转到下一页
+                        window.location.href = '/productPlan3/index.html';
+                    } else {
+                        // 选项未全部正确，添加提示效果
+                        const button = document.querySelector('.confirm-button');
+                        button.style.transform = 'translateX(-50%) scale(0.9)';
+                        setTimeout(() => {
+                            button.style.transform = 'translateX(-50%) scale(1)';
+                        }, 200);
+                    }
+                };
+
+                // 页面离开时保存音乐状态
+                onUnmounted(saveMusicState);
+
+                onMounted(async () => {
+                    // 恢复音乐状态
+                    const savedState = JSON.parse(localStorage.getItem('musicState') || '{"isPlaying": false, "currentTime": 0}');
+                    isPlaying.value = savedState.isPlaying;
+
+                    // 等待音频加载完成后恢复进度
+                    if (bgMusic.value) {
+                        const onMetadataLoaded = () => {
+                            bgMusic.value.currentTime = savedState.currentTime;
+                            if (isPlaying.value) {
+                                bgMusic.value.play().catch(err => {
+                                    console.log('需用户交互后播放:', err);
+                                    isPlaying.value = false;
+                                });
+                            }
+                            bgMusic.value.removeEventListener('loadedmetadata', onMetadataLoaded);
+                        };
+
+                        bgMusic.value.addEventListener('loadedmetadata', onMetadataLoaded);
+                        if (bgMusic.value.readyState >= 1) {
+                            onMetadataLoaded();
+                        }
+                    }
+
+                    // 初始化正确计数
+                    correctCount.value = 0;
+
+                    // 拖拽状态管理
+                    const dragState = {
+                        element: null,
+                        initialX: 0,
+                        initialY: 0,
+                        startX: 0,
+                        startY: 0,
+                        isDragging: false,
+                        originalParent: null,
+                        originalHTML: '',
+                        value: '',
+                        activeTarget: null
+                    };
+
+                    // 获取所有可拖拽元素和目标容器
+                    const draggables = document.querySelectorAll('.option');
+                    const dropTargets = document.querySelectorAll('.progress-wrap');
+                    const placeholders = {};
+
+                    // 初始化占位符引用
+                    draggables.forEach(el => {
+                        placeholders[el.dataset.value] = document.getElementById(`placeholder-${el.dataset.value}`);
+                    });
+
+                    // 更新正确计数函数
+                    const updateCorrectCount = () => {
+                        let count = 0;
+                        dropTargets.forEach(target => {
+                            const option = target.querySelector('.option.correct');
+                            if (option) {
+                                count++;
+                            }
+                        });
+                        correctCount.value = count;
+                    };
+
+                    // 初始化拖拽元素
+                    draggables.forEach(el => {
+                        // 绑定鼠标事件
+                        el.addEventListener('dragstart', handleDragStart);
+                        el.addEventListener('dragend', handleDragEnd);
+
+                        // 绑定触摸事件
+                        el.addEventListener('touchstart', handleTouchStart, { passive: false, capture: true });
+                    });
+
+                    // 绑定全局触摸事件
+                    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+                    document.addEventListener('touchcancel', handleTouchEnd, { passive: false });
+
+                    // 绑定目标容器事件
+                    dropTargets.forEach(target => {
+                        target.addEventListener('dragover', handleDragOver);
+                        target.addEventListener('dragenter', handleDragEnter);
+                        target.addEventListener('dragleave', handleDragLeave);
+                        target.addEventListener('drop', handleDrop);
+                    });
+
+                    // 鼠标拖拽开始
+                    function handleDragStart(e) {
+                        dragState.element = this;
+                        dragState.originalParent = this.parentNode;
+                        dragState.value = this.dataset.value;
+                        e.dataTransfer.setData('text/plain', this.dataset.value);
+                        setTimeout(() => {
+                            this.classList.add('dragging');
+                        }, 0);
+                    }
+
+                    // 鼠标拖拽结束
+                    function handleDragEnd() {
+                        this.classList.remove('dragging');
+                        dropTargets.forEach(target => {
+                            target.classList.remove('drag-over');
+                        });
+                    }
+
+                    // 鼠标拖拽经过
+                    function handleDragOver(e) {
+                        e.preventDefault();
+                    }
+
+                    // 鼠标拖拽进入
+                    function handleDragEnter(e) {
+                        e.preventDefault();
+                        this.classList.add('drag-over');
+                    }
+
+                    // 鼠标拖拽离开
+                    function handleDragLeave() {
+                        this.classList.remove('drag-over');
+                    }
+
+                    // 鼠标放置
+                    function handleDrop(e) {
+                        e.preventDefault();
+                        this.classList.remove('drag-over');
+
+                        const value = e.dataTransfer.getData('text/plain');
+                        const draggedElement = document.querySelector(`.option[data-value="${value}"]`);
+
+                        if (draggedElement) {
+                            placeElement(this, draggedElement);
+                            updateCorrectCount(); // 更新正确计数
+                        }
+                    }
+
+                    // 触摸开始
+                    function handleTouchStart(e) {
+                        if (e.touches.length !== 1) return;
+
+                        const touch = e.touches[0];
+                        dragState.element = this;
+                        dragState.originalParent = this.parentNode;
+                        dragState.value = this.dataset.value;
+                        dragState.isDragging = true;
+
+                        // 记录元素初始位置和触摸位置
+                        const rect = this.getBoundingClientRect();
+                        dragState.initialX = rect.left;
+                        dragState.initialY = rect.top;
+                        dragState.startX = touch.clientX;
+                        dragState.startY = touch.clientY;
+                        dragState.originalHTML = dragState.originalParent.innerHTML;
+
+                        // 设置拖拽样式
+                        this.classList.add('touch-dragging');
+                        this.style.left = `${rect.left}px`;
+                        this.style.top = `${rect.top}px`;
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+
+                    // 触摸移动 - 优化目标检测
+                    function handleTouchMove(e) {
+                        if (!dragState.isDragging || !dragState.element) return;
+
+                        if (e.touches.length !== 1) return;
+
+                        e.preventDefault();
+                        const touch = e.touches[0];
+
+                        // 计算移动距离和新位置
+                        const dx = touch.clientX - dragState.startX;
+                        const dy = touch.clientY - dragState.startY;
+                        const newX = dragState.initialX + dx;
+                        const newY = dragState.initialY + dy;
+
+                        // 限制在可视区域内
+                        const viewportWidth = window.innerWidth;
+                        const viewportHeight = window.innerHeight;
+                        const elementWidth = dragState.element.offsetWidth;
+                        const elementHeight = dragState.element.offsetHeight;
+
+                        const constrainedX = Math.max(0, Math.min(newX, viewportWidth - elementWidth));
+                        const constrainedY = Math.max(0, Math.min(newY, viewportHeight - elementHeight));
+
+                        // 更新元素位置
+                        dragState.element.style.left = `${constrainedX}px`;
+                        dragState.element.style.top = `${constrainedY}px`;
+
+                        // 检测当前是否在目标框上方
+                        let currentTarget = null;
+                        const touchX = touch.clientX;
+                        const touchY = touch.clientY;
+
+                        // 优先检测触摸点位置而非元素位置
+                        dropTargets.forEach((target, index) => {
+                            const rect = target.getBoundingClientRect();
+                            // 最后一个目标框扩大检测范围
+                            const top = index === 2 ? rect.top - 5 : rect.top;
+                            const bottom = index === 2 ? rect.bottom + 5 : rect.bottom;
+
+                            if (touchX >= rect.left && touchX <= rect.right &&
+                                touchY >= top && touchY <= bottom) {
+                                currentTarget = target;
+                            }
+                        });
+
+                        // 更新目标框高亮状态
+                        if (currentTarget) {
+                            if (dragState.activeTarget !== currentTarget) {
+                                if (dragState.activeTarget) {
+                                    dragState.activeTarget.classList.remove('drag-over');
+                                }
+                                currentTarget.classList.add('drag-over');
+                                dragState.activeTarget = currentTarget;
+                            }
+                        } else if (dragState.activeTarget) {
+                            dragState.activeTarget.classList.remove('drag-over');
+                            dragState.activeTarget = null;
+                        }
+                    }
+
+                    // 触摸结束 - 改进放置逻辑
+                    function handleTouchEnd(e) {
+                        if (!dragState.isDragging || !dragState.element) return;
+
+                        // 保存当前激活的目标
+                        const finalTarget = dragState.activeTarget;
+
+                        // 清理拖拽样式
+                        dragState.element.classList.remove('touch-dragging');
+                        dragState.element.style.left = '';
+                        dragState.element.style.top = '';
+
+                        // 移除所有目标的高亮
+                        dropTargets.forEach(target => {
+                            target.classList.remove('drag-over');
+                        });
+
+                        // 针对最后一个选项的特殊处理
+                        if (!finalTarget && dragState.value === 'B') {
+                            const lastTarget = dropTargets[2];
+                            const rect = lastTarget.getBoundingClientRect();
+                            const elementRect = dragState.element.getBoundingClientRect();
+
+                            if (elementRect.right > rect.left && elementRect.left < rect.right &&
+                                elementRect.bottom > rect.top && elementRect.top < rect.bottom) {
+                                finalTarget = lastTarget;
+                            }
+                        }
+
+                        // 如果有激活的目标，尝试放置
+                        if (finalTarget) {
+                            placeElement(finalTarget, dragState.element);
+                            updateCorrectCount(); // 更新正确计数
+                        } else {
+                            // 没有目标，返回原位置
+                            if (dragState.originalParent && !dragState.originalParent.contains(dragState.element)) {
+                                dragState.originalParent.innerHTML = dragState.originalHTML;
+                                const restoredElement = dragState.originalParent.querySelector('.option');
+                                if (restoredElement) {
+                                    restoredElement.addEventListener('touchstart', handleTouchStart, { passive: false, capture: true });
+                                }
+                            } else {
+                                resetElementPosition(dragState.element);
+                            }
+                        }
+
+                        // 重置拖拽状态
+                        Object.keys(dragState).forEach(key => {
+                            dragState[key] = null;
+                        });
+                        dragState.isDragging = false;
+                    }
+
+                    // 放置元素到目标容器
+                    function placeElement(target, element) {
+                        // 清除目标容器中已有的元素
+                        if (target.querySelector('.option')) {
+                            const existing = target.querySelector('.option');
+                            // 如果移除的是正确的元素，更新计数
+                            if (existing.classList.contains('correct')) {
+                                correctCount.value--;
+                            }
+                            resetElementPosition(existing);
+                        }
+
+                        // 确保元素被正确添加
+                        target.innerHTML = '';
+                        const clonedElement = element.cloneNode(true);
+                        target.appendChild(clonedElement);
+
+                        // 重新绑定事件
+                        clonedElement.addEventListener('touchstart', handleTouchStart, { passive: false, capture: true });
+
+                        // 验证是否正确
+                        const requirementBox = target.closest('.requirement-box');
+                        const isCorrect = requirementBox.dataset.correct === clonedElement.dataset.value;
+
+                        clonedElement.classList.remove('correct', 'incorrect', 'return-animation');
+                        if (isCorrect) {
+                            clonedElement.classList.add('correct');
+                        } else {
+                            clonedElement.classList.add('incorrect');
+                            
+                            // 错误1秒后返回原位置，添加动画效果
+                            setTimeout(() => {
+                                clonedElement.classList.add('return-animation');
+                                resetElementPosition(clonedElement);
+                            }, 1000);
+                        }
+
+                        // 移除原元素
+                        if (element.parentNode && element !== clonedElement) {
+                            element.parentNode.removeChild(element);
+                        }
+                    }
+
+                    // 重置元素到原始位置
+                    function resetElementPosition(element) {
+                        const value = element.dataset.value;
+                        const placeholder = placeholders[value];
+
+                        if (placeholder) {
+                            // 如果重置的是正确的元素，更新计数
+                            if (element.classList.contains('correct')) {
+                                correctCount.value--;
+                            }
+                            
+                            // 记录当前位置用于计算动画
+                            const currentRect = element.getBoundingClientRect();
+                            const placeholderRect = placeholder.getBoundingClientRect();
+                            
+                            // 计算位置差并设置初始位置，确保动画平滑
+                            const dx = currentRect.left - placeholderRect.left;
+                            const dy = currentRect.top - placeholderRect.top;
+                            element.style.transform = `translate(${dx}px, ${dy}px)`;
+                            
+                            // 强制重绘后清除变换，触发过渡动画
+                            setTimeout(() => {
+                                element.style.transform = '';
+                            }, 10);
+                            
+                            // 将元素放回占位符
+                            placeholder.innerHTML = '';
+                            placeholder.appendChild(element);
+
+                            // 重新绑定事件
+                            element.addEventListener('touchstart', handleTouchStart, { passive: false, capture: true });
+                            
+                            // 动画结束后移除类
+                            setTimeout(() => {
+                                element.classList.remove('correct', 'incorrect', 'return-animation');
+                            }, 300);
+                        }
+                    }
+                });
+
+                return {
+                    isPlaying,
+                    bgMusic,
+                    toggleMusic,
+                    checkAndProceed
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

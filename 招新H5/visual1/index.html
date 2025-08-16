@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>病毒袭击！红岩重启计划</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 新增：正确操作后的过渡动画 */
+        .logo-transition {
+            animation: pulse 1.5s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(229, 62, 62, 0.5); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="container">
+        <!-- 左上角内容  -->
+        <div class="toptitle">第二关 视觉重现</div>
+        <div class="top-left-content">
+            <img src="/images/productJuan.png">
+            <div class="top-left-text">
+                怎么办！网页LOGO被病毒感染啦！原本应该是校徽颜色的LOGO现在变成了白色。
+                <b>请你选择一个油漆桶的颜色为LOGO重新上色吧！</b>
+            </div>
+        </div>
+
+        <!-- 笔刷容器 -->
+        <div id="brush-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;"></div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <div class="text-content-bg">
+                <div class="blackboard">
+                    <img src="/images/blackboard.png">
+                    <div class="logo">
+                        <img id="logoImage" src="/images/whiteLogo.jpg">
+                    </div>
+                    <div class="redCan paint-can" @click="createBrush('red')">
+                        <img src="/images/redCan.jpg">
+                    </div>
+                    <div class="yellowCan paint-can" @click="createBrush('yellow')">
+                        <img src="/images/yellowCan.jpg">
+                    </div>
+                    <div class="blueCan paint-can" @click="createBrush('blue')">
+                        <img src="/images/blueCan.jpg">
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                    </div>
+                    <div class="progress-dot"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 音乐控制按钮 -->
+        <button class="music-btn" @click="toggleMusic">
+            <i class="fa fa-music" :class="{ 'spin': isPlaying }"></i>
+        </button>
+
+        <!-- 错误弹窗 -->
+        <div id="errorPopup" class="popup-overlay">
+            <div class="popup">
+                <div class="popup-content">
+                    <img src="/images/productJuan.png" alt="错误提示" class="errorjuanimg">
+                    <p class="popup-message">不太对哦 红岩LOGO好像跟我想的颜色不一样哦~</p>
+                </div>
+                <button class="popup-button" @click="closePopup">重新选择</button>
+            </div>
+        </div>
+
+        <!-- 音频元素 -->
+        <audio ref="bgMusic" loop>
+            <source src="/musics/配乐文件2-游戏时的音乐.MP3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        createApp({
+            setup() {
+                // 音乐状态
+                const bgMusic = ref(null);
+                const isPlaying = ref(false);
+                
+                // 当前激活的笔刷
+                let activeBrush = null;
+                let brushOffsetX = 0;
+                let brushOffsetY = 0;
+                let currentBrushColor = null;
+                let isLevelCompleted = false; // 标记关卡是否已完成
+                
+                // 保存音乐状态到localStorage
+                const saveMusicState = () => {
+                    if (bgMusic.value) {
+                        localStorage.setItem('musicState', JSON.stringify({
+                            isPlaying: isPlaying.value,
+                            currentTime: bgMusic.value.currentTime
+                        }));
+                    }
+                };
+
+                // 切换音乐播放/暂停
+                const toggleMusic = () => {
+                    isPlaying.value = !isPlaying.value;
+                    if (isPlaying.value) {
+                        bgMusic.value.play().catch(err => {
+                            console.log('播放失败:', err);
+                            isPlaying.value = false;
+                        });
+                    } else {
+                        bgMusic.value.pause();
+                    }
+                    saveMusicState();
+                };
+
+                // 创建笔刷
+                const createBrush = (color) => {
+                    // 如果关卡已完成，不再创建新笔刷
+                    if (isLevelCompleted) return;
+                    
+                    // 移除现有笔刷
+                    if (activeBrush) {
+                        activeBrush.remove();
+                    }
+                    
+                    currentBrushColor = color;
+                    
+                    // 创建新笔刷
+                    const brushContainer = document.getElementById('brush-container');
+                    const brush = document.createElement('div');
+                    brush.className = `brush brush-${color}`;
+                    brush.innerHTML = '<i class="fa fa-paint-brush brush-icon"></i>';
+                    
+                    // 定位在点击的油漆桶上方
+                    const canElement = document.querySelector(`.${color}Can`);
+                    const canRect = canElement.getBoundingClientRect();
+                    const containerRect = document.querySelector('.container').getBoundingClientRect();
+                    
+                    brush.style.left = `${canRect.left - containerRect.left + canRect.width/2}px`;
+                    brush.style.top = `${canRect.top - containerRect.top - 50}px`;
+                    
+                    brushContainer.appendChild(brush);
+                    activeBrush = brush;
+                    
+                    // 准备拖动
+                    setupDraggable(brush);
+                };
+                
+                // 检测两个元素是否碰撞
+                const checkCollision = (element1, element2) => {
+                    const rect1 = element1.getBoundingClientRect();
+                    const rect2 = element2.getBoundingClientRect();
+                    
+                    return !(
+                        rect1.bottom < rect2.top ||
+                        rect1.top > rect2.bottom ||
+                        rect1.right < rect2.left ||
+                        rect1.left > rect2.right
+                    );
+                };
+                
+                // 处理笔刷与Logo的碰撞
+                const handleLogoCollision = () => {
+                    if (!activeBrush || isLevelCompleted) return;
+                    
+                    const logoElement = document.getElementById('logoImage');
+                    if (checkCollision(activeBrush, logoElement)) {
+                        // 碰撞发生
+                        if (currentBrushColor === 'red') {
+                            // 红色笔刷 - 正确，更改Logo
+                            logoElement.src = '/images/redLogo.jpg';
+                            // 添加过渡动画
+                            logoElement.classList.add('logo-transition');
+                            // 标记关卡完成
+                            isLevelCompleted = true;
+                            // 移除笔刷
+                            if (activeBrush) {
+                                activeBrush.remove();
+                                activeBrush = null;
+                            }
+                            // 延迟跳转，展示动画效果
+                            setTimeout(() => {
+                                // 保存音乐状态后跳转
+                                saveMusicState();
+                                window.location.href = '/visual2/index.html';
+                            }, 1500); // 1.5秒后跳转，与动画时长一致
+                        } else {
+                            // 蓝色或黄色笔刷 - 不正确，显示弹窗
+                            showPopup();
+                        }
+                    }
+                };
+                
+                // 显示弹窗
+                const showPopup = () => {
+                    const popup = document.getElementById('errorPopup');
+                    popup.classList.add('active');
+                    
+                    // 移除笔刷
+                    if (activeBrush) {
+                        activeBrush.remove();
+                        activeBrush = null;
+                    }
+                };
+                
+                // 关闭弹窗
+                const closePopup = () => {
+                    const popup = document.getElementById('errorPopup');
+                    popup.classList.remove('active');
+                };
+                
+                // 设置笔刷可拖动
+                const setupDraggable = (brush) => {
+                    // 鼠标事件
+                    brush.addEventListener('mousedown', startDrag);
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('mouseup', endDrag);
+                    
+                    // 触摸事件
+                    brush.addEventListener('touchstart', startDrag, { passive: false });
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('touchend', endDrag);
+                    
+                    function startDrag(e) {
+                        e.preventDefault();
+                        
+                        // 获取事件位置（兼容鼠标和触摸）
+                        let clientX, clientY;
+                        if (e.type.startsWith('touch')) {
+                            clientX = e.touches[0].clientX;
+                            clientY = e.touches[0].clientY;
+                        } else {
+                            clientX = e.clientX;
+                            clientY = e.clientY;
+                        }
+                        
+                        // 计算偏移量
+                        const brushRect = brush.getBoundingClientRect();
+                        brushOffsetX = clientX - brushRect.left;
+                        brushOffsetY = clientY - brushRect.top;
+                        
+                        // 提高当前笔刷层级
+                        brush.style.zIndex = 20;
+                    }
+                    
+                    function drag(e) {
+                        if (!activeBrush || isLevelCompleted) return;
+                        e.preventDefault();
+                        
+                        // 获取容器位置
+                        const container = document.querySelector('.container');
+                        const containerRect = container.getBoundingClientRect();
+                        
+                        // 获取事件位置（兼容鼠标和触摸）
+                        let clientX, clientY;
+                        if (e.type.startsWith('touch')) {
+                            clientX = e.touches[0].clientX;
+                            clientY = e.touches[0].clientY;
+                        } else {
+                            clientX = e.clientX;
+                            clientY = e.clientY;
+                        }
+                        
+                        // 计算新位置（相对于容器）
+                        let newLeft = clientX - containerRect.left - brushOffsetX;
+                        let newTop = clientY - containerRect.top - brushOffsetY;
+                        
+                        // 限制在容器内
+                        newLeft = Math.max(0, Math.min(newLeft, containerRect.width - 30));
+                        newTop = Math.max(0, Math.min(newTop, containerRect.height - 30));
+                        
+                        // 设置新位置
+                        brush.style.left = `${newLeft}px`;
+                        brush.style.top = `${newTop}px`;
+                    }
+                    
+                    function endDrag() {
+                        if (brush && !isLevelCompleted) {
+                            // 恢复z-index
+                            brush.style.zIndex = 10;
+                            // 检查是否与Logo碰撞
+                            handleLogoCollision();
+                        }
+                    }
+                };
+
+                // 页面加载时恢复音乐状态
+                onMounted(async () => {
+                    // 恢复音乐状态（从localStorage读取）
+                    const savedState = JSON.parse(localStorage.getItem('musicState') || '{"isPlaying": false, "currentTime": 0}');
+                    isPlaying.value = savedState.isPlaying;
+
+                    // 等待音频加载完成后恢复进度
+                    if (bgMusic.value) {
+                        // 监听音频元数据加载完成
+                        const onMetadataLoaded = () => {
+                            // 恢复上一页的播放进度
+                            bgMusic.value.currentTime = savedState.currentTime;
+                            // 如果上一页是播放状态，继续播放
+                            if (isPlaying.value) {
+                                bgMusic.value.play().catch(err => {
+                                    console.log('需用户交互后播放:', err);
+                                    isPlaying.value = false; // 若失败则重置状态
+                                });
+                            }
+                            // 移除事件监听（避免重复触发）
+                            bgMusic.value.removeEventListener('loadedmetadata', onMetadataLoaded);
+                        };
+
+                        // 绑定加载事件
+                        bgMusic.value.addEventListener('loadedmetadata', onMetadataLoaded);
+                        // 若音频已缓存，手动触发一次
+                        if (bgMusic.value.readyState >= 1) {
+                            onMetadataLoaded();
+                        }
+                    }
+
+                    // 绑定病毒点击事件
+                    const bindVirusClick = () => {
+                        const viruses = document.querySelectorAll('.virus');
+                        viruses.forEach((virus) => {
+                            virus.addEventListener('click', () => {
+                                window.location.href = '/productPlan2/index.html';
+                            });
+                        });
+                    };
+                    bindVirusClick();
+                });
+
+                // 页面离开时保存音乐状态
+                onUnmounted(() => {
+                    saveMusicState();
+                    // 移除事件监听器
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('mouseup', endDrag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('touchend', endDrag);
+                });
+
+                return {
+                    isPlaying, bgMusic,
+                    toggleMusic,
+                    createBrush,
+                    closePopup
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
+    

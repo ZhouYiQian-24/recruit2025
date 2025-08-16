@@ -1,0 +1,299 @@
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面容器 */
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('images/officeBackground.jpg') no-repeat center center;
+    background-size: cover;
+    overflow: hidden;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+.toptitle {
+    position: absolute;
+    top: 53px;
+    left: 24px;
+    font-size: 20px;
+}
+
+/* 左上角内容 */
+.top-left-content {
+    position: absolute;
+    top: 51px;
+    left: 8px;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+    top: 97px;
+}
+
+.top-left-content img {
+    width: 86px;
+    height: 121px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+.top-left-text {
+    background-color: #D8D8D8;
+    padding: 10px;
+    width: 241px;
+    height: 116px;
+    font-size: 12px;
+    color: #0e0d0d;
+    line-height: 1.4;
+    position: absolute;
+    left: 98px;
+}
+
+/* 内容区域布局 */
+.content {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 背景 */
+.text-content-bg {
+    width: 323px;
+    height: 350px;
+    background-color: #FDFDFD;
+    padding: 30px;
+    overflow-wrap: break-word;
+    position: absolute;
+    bottom: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.device-container {
+    width: 344px;
+    height: 240px;
+    background-color: #f0f0f0;
+    border: 22px solid #464646;
+    border-radius: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* 手机外框样式 */
+.phone {
+    width: 112px;
+    height: 174px;
+    background-color: #fff;
+    border: 9px solid #333;
+    border-radius: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+/* 给文字上方添加横线，和手机边框一样粗（3px） */
+.phone-text::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    /* 调整距离文字的间距 */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    height: 9px;
+}
+
+.phone::after {
+    content: "";
+    width: 11px;
+    height: 11px;
+    background-color: #333;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 给文字下方添加横线，和手机边框一样粗（3px） */
+.phone-text::after {
+    content: "";
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    height: 9px;
+}
+
+/* 手机内文字样式 */
+.phone-text {
+    text-align: center;
+    color: #333;
+}
+
+.phone-text h2 {
+    font-size: 12px;
+    margin-bottom: 10px;
+    margin-top: 28px;
+    font-weight: bold;
+}
+
+.phone-text p {
+    font-size: 9px;
+    margin-bottom: 8px;
+}
+
+.frontend1img {
+    width: 154px;
+    height: 162px;
+}
+
+.trapezoid-border {
+    margin-top: 10px;
+    width: 220px;
+    height: 40px;
+    /* 调整边框宽度控制梯形的形状，下面边框宽度决定下底长度，左右边框宽度影响斜边角度 */
+    border-bottom: 40px solid #464646;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-radius: 25px;
+}
+
+/* 音乐按钮（保留原样式，不改动） */
+.music-btn {
+    position: absolute;
+    top: 53px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: black;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 30;
+}
+
+/* 音乐图标旋转动画（保留原逻辑，不改动） */
+.fa-music.spin {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 响应式调整（保留原逻辑，不改动） */
+@media (max-width: 480px) {
+    .battle-letter-bg {
+        padding: 20px 15px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .text-line {
+        font-size: 14px;
+    }
+}
+
+/* 进度条容器 */
+.progress-container {
+    position: absolute;
+    bottom: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 325px;
+}
+
+/* 灰色粗线 + flex 容器 */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* 节点自动等距 */
+}
+
+/* 6个等距灰色点 */
+.progress-node {
+    width: 15px;
+    height: 15px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-top: -3.5px;
+    /* 垂直居中 */
+    z-index: 2;
+}
+
+/* 覆盖第一个点的图片（示例） */
+.progress-dot {
+    width: 20px;
+    height: 28px;
+    background: url('/images/productJuan.png') no-repeat center;
+    position: absolute;
+    left: 38%;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 3;
+}
+
+.virus {
+    cursor: pointer;
+}
+
+/* 开始修复按钮 */
+.repair-btn {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4D67E4;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+}
+
+
+
+.repair-btn:active {
+    transform: translateX(-50%) scale(0.98);
+}

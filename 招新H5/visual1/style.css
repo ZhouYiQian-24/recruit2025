@@ -1,0 +1,325 @@
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面容器 */
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('images/officeBackground.jpg') no-repeat center center;
+    background-size: cover;
+    overflow: hidden;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+.toptitle {
+    position: absolute;
+    top: 53px;
+    left: 24px;
+    font-size: 20px;
+}
+
+/* 左上角内容 */
+.top-left-content {
+    position: absolute;
+    top: 51px;
+    left: 8px;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+    top: 97px;
+}
+
+.top-left-content img {
+    width: 86px;
+    height: 121px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+.top-left-text {
+    background-color: #D8D8D8;
+    padding: 10px;
+    width: 241px;
+    height: 116px;
+    font-size: 12px;
+    color: #0e0d0d;
+    line-height: 1.4;
+    position: absolute;
+    left: 98px;
+}
+
+/* 内容区域布局 */
+.content {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 背景 */
+.text-content-bg {
+    width: 323px;
+    height: 350px;
+    background-color: #F8F8F8;
+    padding: 30px;
+    overflow-wrap: break-word;
+    position: absolute;
+    bottom: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.blackboard {
+    width: 300px;
+    height: 175px;
+    position: absolute;
+    left: 38px;
+    z-index: 1;
+}
+
+.logo {
+    position: absolute;
+    left: 90px;
+    top: 40px;
+}
+
+.redCan {
+    position: absolute;
+    left: 60px;
+    top: 140px;
+}
+
+.yellowCan {
+    position: absolute;
+    left: 140px;
+    top: 170px;
+}
+
+.blueCan {
+    position: absolute;
+    left: 210px;
+    top: 150px;
+}
+
+.brush {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+    transition: transform 0.1s ease-out;
+}
+
+.brush-icon {
+    font-size: 36px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.brush-red .brush-icon {
+    color: #e53e3e;
+}
+
+.brush-yellow .brush-icon {
+    color: #ecc94b;
+}
+
+.brush-blue .brush-icon {
+    color: #3182ce;
+}
+
+/* 油漆桶点击效果 */
+.paint-can {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.paint-can:active {
+    transform: scale(0.95);
+}
+
+
+/* 弹窗样式 */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.popup-content {
+  display: flex; 
+  align-items: center; /* 垂直方向居中对齐 */
+  margin-bottom: 24px; /* 与按钮拉开距离 */
+  margin-left: 30px;
+}
+
+/* 错误提示图片样式 */
+.errorjuanimg {
+  width: 86px; /* 可根据实际调整 */
+  height: 121px;
+  margin-right: 16px; /* 与文字拉开距离 */
+}
+
+/* 弹窗文字样式 */
+.popup-message {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+  margin: 0; /* 清除默认 margin，避免影响排版 */
+}
+
+/* 弹窗按钮样式 */
+.popup-button {
+  background-color: #4C66E1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: 70px;
+
+}
+.popup-button:hover {
+  background-color: #3b73d1;
+}
+
+
+
+/* 油漆桶点击效果 */
+.paint-can {
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.paint-can:active {
+    transform: scale(0.95);
+}
+
+/* 悬停高亮效果*/
+.paint-can:hover {
+    box-shadow: 0 0 10px rgba(255, 200, 0, 0.8); 
+
+}
+
+/* 音乐按钮（保留原样式，不改动） */
+.music-btn {
+    position: absolute;
+    top: 53px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: black;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 30;
+}
+
+/* 音乐图标旋转动画（保留原逻辑，不改动） */
+.fa-music.spin {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 响应式调整（保留原逻辑，不改动） */
+@media (max-width: 480px) {
+    .battle-letter-bg {
+        padding: 20px 15px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .text-line {
+        font-size: 14px;
+    }
+}
+
+/* 进度条容器 */
+.progress-container {
+    position: absolute;
+    bottom: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 325px;
+}
+
+/* 灰色粗线 + flex 容器 */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* 节点自动等距 */
+}
+
+/* 6个等距灰色点 */
+.progress-node {
+    width: 15px;
+    height: 15px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-top: -3.5px;
+    /* 垂直居中 */
+    z-index: 2;
+}
+
+/* 覆盖第一个点的图片（示例） */
+.progress-dot {
+    width: 20px;
+    height: 28px;
+    background: url('/images/productJuan.png') no-repeat center;
+    position: absolute;
+    left: 20%;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 3;
+}

@@ -1,0 +1,177 @@
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面布局 */
+body {
+    background: #f5f5f5;
+    font-family: "微软雅黑", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    padding: 16px;
+    /* 增加页面内边距，避免内容贴边 */
+}
+
+/* 容器样式 */
+.container {
+    width: 338px;
+    height: 476px;
+    background: #c7c7c7;
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* 标题样式 */
+.title {
+    font-size: 50px;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+/* 病毒图片框样式 */
+.virus-img {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    opacity: 1;
+    transition: opacity 3s ease-out;
+}
+
+.desc {
+    font-size: 15px;
+    width: 303px;
+    height: 164px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    text-align: left;
+    padding: 20px 4px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.character-img {
+    width: 86px;
+    height: 121px;
+    margin-bottom: 20px;
+    position: absolute;
+    left: 20px;
+    top: 280px;
+}
+
+/* 下一关按钮样式 */
+.next-btn {
+    background: #007bff;
+    color: #fff;
+    font-size: 15px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 116px;
+    height: 44px;
+    position: absolute;
+    bottom: 33px;
+    right: 45px;
+}
+
+.next-btn:hover {
+    background: #0056b3;
+}
+
+/* 病毒图片框渐变消失动画 */
+.virus-img.fade-out {
+    opacity: 0;
+}
+
+/* 容器渐显动画 */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 音乐按钮 */
+.music-btn {
+    position: absolute;
+    /* top: 53px → 53/667×100% ≈ 7.95% */
+    top: 7.95%;
+    /* right: 8px → 8/375×100% ≈ 2.13% */
+    right: 2.13%;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: black;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 30;
+}
+
+/* 音乐播放按键旋转效果 */
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin-animation {
+    animation: spin-slow 2s linear infinite;
+}
+
+/* 针对小屏幕的特殊适配 */
+@media (max-width: 320px) {
+    .container {
+        padding: 16px 12px;
+    }
+
+    .desc {
+        margin-bottom: 16px;
+        line-height: 1.5;
+        /* 保持居中 */
+        text-align: center;
+    }
+
+    .next-btn {
+        padding: 10px 20px;
+    }
+}
+
+/* 针对大屏幕的适配 */
+@media (min-width: 500px) {
+    .container {
+        padding: 24px;
+    }
+
+    .desc {
+        text-align: center;
+        /* 大屏幕保持居中 */
+    }
+}
+    

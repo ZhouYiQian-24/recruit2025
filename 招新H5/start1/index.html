@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>病毒袭击！红岩重启计划</title>
+    <!-- 生产环境Vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="overflow-hidden">
+    <div id="app" class="main-container relative w-full h-screen">
+        <!-- 左侧信息栏 -->
+        <div class="info-panel">
+            <h2 class="info-title">关于我们</h2>
+            <p class="info-content">
+                红岩网校工作站是从事产品开发运营的校级学生组织，在校团委的带领下培养出一批优秀的互联网人才，深受腾讯、字节跳动等知名互联网企业青睐。
+            </p>
+        </div>
+        
+        <!-- 大门容器 -->
+        <div ref="gate" class="gate-container" @click="handleGateClick">
+            <div v-if="showRedLight" class="red-light"></div>
+        </div>
+        
+        <!-- 引导文案 -->
+        <div class="guide-text">
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;眼前的红岩网校大门，好像有点不对劲。<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击这扇门，进去看看，或许里面有需要你帮忙的事呢？
+            </p>
+        </div>
+        
+        <!-- 音乐控制按钮 -->
+        <button class="music-btn" @click="toggleMusic">
+            <i class="fa fa-music text-xl" :class="isPlaying ? 'spin-animation' : ''"></i>
+        </button>
+        
+        <!-- 音频元素 -->
+        <audio ref="bgMusic" loop>
+            <source src="/musics/配乐文件1-悬疑.MP3" type="audio/mpeg">
+           您的浏览器不支持音频播放
+        </audio>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        createApp({
+            setup() {
+                // 音乐状态
+                const bgMusic = ref(null);
+                const isPlaying = ref(false); // 初始设为false，避免自动播放失败
+                
+                // 大门相关
+                const gate = ref(null);
+                const showRedLight = ref(false);
+                
+                // 切换音乐播放状态
+                const toggleMusic = () => {
+                    isPlaying.value = !isPlaying.value;
+                    if (isPlaying.value) {
+                        bgMusic.value.play().catch(err => {
+                            console.log('播放失败:', err);
+                            isPlaying.value = false;
+                        });
+                    } else {
+                        bgMusic.value.pause();
+                    }
+                    // 实时保存状态
+                    saveMusicState();
+                };
+                
+                // 保存音乐状态到localStorage
+                const saveMusicState = () => {
+                    if (bgMusic.value) {
+                        localStorage.setItem('musicState', JSON.stringify({
+                            isPlaying: isPlaying.value,
+                            currentTime: bgMusic.value.currentTime
+                        }));
+                    }
+                };
+                
+                // 大门点击跳转
+                const handleGateClick = () => {
+                    showRedLight.value = true;
+                    gate.value.classList.add('door-animation');
+                    
+                    // 跳转前保存状态
+                    saveMusicState();
+                    
+                    setTimeout(() => {
+                        gate.value.classList.remove('door-animation');
+                        showRedLight.value = false;
+                        window.location.href = '../start2/index.html';
+                    }, 1000);
+                };
+                
+                // 页面加载时恢复状态
+                onMounted(() => {
+                    const savedState = JSON.parse(localStorage.getItem('musicState') || '{"isPlaying": false, "currentTime": 0}');
+                    isPlaying.value = savedState.isPlaying;
+                    
+                    // 等待音频加载完成后恢复进度
+                    bgMusic.value.addEventListener('loadedmetadata', () => {
+                        bgMusic.value.currentTime = savedState.currentTime;
+                        // 仅在用户已交互过的情况下尝试恢复播放
+                        if (isPlaying.value) {
+                            bgMusic.value.play().catch(err => {
+                                console.log('需手动播放:', err);
+                                isPlaying.value = false;
+                            });
+                        }
+                    });
+                });
+                
+                // 页面关闭时保存状态
+                onUnmounted(saveMusicState);
+                
+                return {
+                    bgMusic,
+                    isPlaying,
+                    gate,
+                    showRedLight,
+                    toggleMusic,
+                    handleGateClick
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

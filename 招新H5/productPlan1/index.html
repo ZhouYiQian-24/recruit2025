@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>病毒袭击！红岩重启计划</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app" class="container">
+        <!-- 左上角内容  -->
+        <div class="toptitle">第一关 产品规划</div>
+        <div class="top-left-content">
+            <img src="/images/productJuan.png">
+            <div class="top-left-text">
+                “不好啦！‘招新线上报名系统’的 PRD 被病毒咬坏了，好多内容都乱了！没有完整的 PRD，技术同学不知道开发什么功能，设计同学不知道画什么界面，见面啥会定办砸…… 你能帮我修复吗？<b>点击病毒查看被遮挡的内容</b>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <div class="text-content-bg">
+                <!-- 进度条 -->
+                <div class="text-content">
+                    “网校招新线上报名系统” PRD V1.0<br />
+                </div>
+                <div class="suspensionPoints">……</div>
+                <div class="coveredText">二、需求分析</div>
+                <div class="virus-box">
+                    <!-- 给病毒图片添加统一的virus类名，方便选中 -->
+                    <img src="/images/bigVirus.png" class="virus virus1">
+                    <img src="/images/bigVirus.png" class="virus virus2">
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                        <div class="progress-node"></div>
+                    </div>
+                    <div class="progress-dot"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 音乐控制按钮 -->
+        <button class="music-btn" @click="toggleMusic">
+            <i class="fa fa-music" :class="{ 'spin': isPlaying }"></i>
+        </button>
+
+        <!-- 音频元素 -->
+        <audio ref="bgMusic" loop>
+            <source src="/musics/配乐文件2-游戏时的音乐.MP3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        createApp({
+            setup() {
+                // 音乐状态（复用页面2的逻辑）
+                const bgMusic = ref(null);
+                const isPlaying = ref(false);
+
+                // 保存音乐状态到localStorage（复用页面2的方法）
+                const saveMusicState = () => {
+                    if (bgMusic.value) {
+                        localStorage.setItem('musicState', JSON.stringify({
+                            isPlaying: isPlaying.value,
+                            currentTime: bgMusic.value.currentTime
+                        }));
+                    }
+                };
+
+                // 切换音乐播放/暂停（复用页面2的逻辑）
+                const toggleMusic = () => {
+                    isPlaying.value = !isPlaying.value;
+                    if (isPlaying.value) {
+                        bgMusic.value.play().catch(err => {
+                            console.log('播放失败:', err);
+                            isPlaying.value = false;
+                        });
+                    } else {
+                        bgMusic.value.pause();
+                    }
+                    saveMusicState();
+                };
+
+                // 页面加载时恢复音乐状态（核心：复用页面2的恢复逻辑）
+                onMounted(async () => {
+                    // 恢复音乐状态（从localStorage读取）
+                    const savedState = JSON.parse(localStorage.getItem('musicState') || '{"isPlaying": false, "currentTime": 0}');
+                    isPlaying.value = savedState.isPlaying;
+
+                    // 等待音频加载完成后恢复进度
+                    if (bgMusic.value) {
+                        // 监听音频元数据加载完成
+                        const onMetadataLoaded = () => {
+                            // 恢复上一页的播放进度
+                            bgMusic.value.currentTime = savedState.currentTime;
+                            // 如果上一页是播放状态，继续播放
+                            if (isPlaying.value) {
+                                bgMusic.value.play().catch(err => {
+                                    console.log('需用户交互后播放:', err);
+                                    isPlaying.value = false; // 若失败则重置状态
+                                });
+                            }
+                            // 移除事件监听（避免重复触发）
+                            bgMusic.value.removeEventListener('loadedmetadata', onMetadataLoaded);
+                        };
+
+                        // 绑定加载事件
+                        bgMusic.value.addEventListener('loadedmetadata', onMetadataLoaded);
+                        // 若音频已缓存，手动触发一次
+                        if (bgMusic.value.readyState >= 1) {
+                            onMetadataLoaded();
+                        }
+                    }
+
+                    // 绑定病毒点击事件，确保能正确跳转
+                    const bindVirusClick = () => {
+                        const viruses = document.querySelectorAll('.virus');
+                        viruses.forEach((virus) => {
+                            virus.addEventListener('click', () => {
+                                window.location.href = '/productPlan2/index.html';
+                            });
+                        });
+                    };
+                    bindVirusClick();
+                });
+
+                // 页面离开时保存音乐状态（跳转前保存）
+                onUnmounted(saveMusicState);
+
+                return {
+                    isPlaying, bgMusic,
+                    toggleMusic
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
